@@ -29,7 +29,6 @@ contract openFarming{
 		uint ownId;
 		uint quantity;
 		uint price;
-		uint status;
 		uint amountSold;
 	}
 	
@@ -46,7 +45,6 @@ contract openFarming{
 		uint ownId;
 		uint capacity;
 		uint price;
-		uint status;
 	}
 	
 	struct order{
@@ -57,6 +55,7 @@ contract openFarming{
 		uint sId2;
 		uint orderType;        ////////// 0--crop ;; 1--storage ;; 2--transport
 		uint status;
+		uint accept;       //////////////0--decline ;; 1--Accepted ;; 2--No Action
 	}
 
     mapping( string => uint) emailToId;
@@ -64,13 +63,15 @@ contract openFarming{
 	mapping ( uint => crop ) public cropInfo;
 	mapping ( uint => store ) public storeInfo;
 	mapping ( uint => transport ) public transportInfo;
+	mapping ( uint => order ) public orderInfo;
 	
-	function getUserId(string email) returns (uint)
-	{
+	function getUserId(string email) returns (uint)	{
 	    return emailToId[email];
 	}
 	
-	
+	function getUserName(uint id) returns (string) {
+	    return userInfo[id].name;
+	}
 	function registerMe(string name,string contact,uint userid,uint usertype,string location,string email,string pass) public returns(bool){
 		if(userIsPresent[userid] != 1)
 		{
@@ -96,8 +97,8 @@ contract openFarming{
 	}
 	
 	function addCrop(string name,uint ownid, uint quantity,uint price) returns (bool) {
-	    uint st = 0; uint amt = 0;
-	    cropInfo[cropCount] = crop(cropCount,name,ownid,quantity,price,st,amt);
+	    uint amt = 0;
+	    cropInfo[cropCount] = crop(cropCount,name,ownid,quantity,price,amt);
 	    cropCount++;
 	    return true;
 	}
@@ -109,10 +110,17 @@ contract openFarming{
 	}
 	
 	function addTransport(uint ownid, uint capacity,uint price) returns (bool) {
-	    uint st = 0;
-	    transportInfo[transportCount] = transport(transportCount,ownid,capacity,price,st);
-	    storeCount++;
+	    transportInfo[transportCount] = transport(transportCount,ownid,capacity,price);
+	    transportCount++;
 	    return true;
+	}
+	
+	function addOrder(uint quantity, uint id1, uint id2, uint id3, uint orderType) returns (bool) {
+	    uint st  = 0; uint a = 2;
+	    orderInfo[orderCount] = order(orderCount, quantity, id1, id2, id3, orderType, st, a);
+	    orderCount++;
+	    return true;
+	    
 	}
 }
 

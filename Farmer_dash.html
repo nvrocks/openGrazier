@@ -95,7 +95,7 @@
     <label for="crop_name">Price</label>
     <input type="number" class="form-control" id="price" placeholder="Price">
   </div>
-  <button class="btn btn-default primary"  id="submit">Submit</button>
+  <button class="btn btn-default primary" id="submit">Submit</button>
 </form>
 </div>
 </div>
@@ -112,23 +112,22 @@
             <th>STORAGE OWNER</th>
             <th>CAPACITY</th>
             <th>PRICE</th>
-  
-            <th></th>
-            <th></th>
+            <th>Crop id</th>
+            <th>Crop quantity</th>
+            <th>Submit</th>
           </tr>
         </thead>
         <tbody id="storageTable">
-        	<tr>
-        	<td id="s1">1</td><td id="s2">2</td><td id="s3">3</td><td id="s4">4</td><td>
+        <!-- <tr>	
+        <td id="s1">1</td><td id="s2">2</td><td id="s3">3</td><td id="s4">4</td><td>
   
        
-          <input type="text" placeholder="Crop Id" class="form-control" id="get_value1"></td>
+          <td>  <input type="text" placeholder="Crop Id" class="form-control" id="get_value1"></td>
          <td> <input type="text" placeholder="Quantity" class="form-control" id="get_value2"></td>
           <td><button id="get_value">SUBMIT</button></td>
-      
-                                          
+                                    
         </tr>
-    </tbody>     
+ -->    </tbody>     
 	</table>
 
     </div>
@@ -150,20 +149,15 @@
           </tr>
         </thead>
         <tbody id="transportTable">
-        	        
-        	<tr>
-        	<td id="t1"></td><td id="t2"></td><td id="t3"></td>
-  
-          <td><input type="text" placeholder="Order Id" class="form-control" id="orderId"></td>
-         <td> <input type="text" placeholder="orderType" class="form-control" id="orderType"></td>  
-          <td><button id="get_value_transport">CLICK</button></td>
-      
-                                          
-        </tr>
+        	       
  
         </tbody>
       </table>
     </div>
+    <input type="text" placeholder="Order Type" class="form-control" id="orderType">
+         <input type="text" placeholder="order Id" class="form-control" id="orderId">
+         <input type="text" placeholder="Transport Id" class="form-control" id="transportId">
+          <button id="placed_transport" onclick="placeTransportOrder()">SUBMIT</button>
 </section>
 
 <section id="four" class="wrapper style1 fullscreen fade-up">
@@ -178,7 +172,7 @@
 
           </tr>
         </thead>
-        <tbody id="orderTable">
+        <tbody id="buyerOrderTable">
         	<tr>
         	</tr>
         </tbody>
@@ -198,7 +192,7 @@
 
           </tr>
         </thead>
-        <tbody id="orderTable">
+        <tbody id="storageOrderTable">
           <tr>
           </tr>
         </tbody>

@@ -54,6 +54,7 @@ contract openFarming{
 	    uint cropId;
 	    uint buyerId;
 	    uint transportId;          //////////to be filled by farmer
+	    uint transportOrderId;    //////////to be filled by farmer
 	    uint storeId;                //////////to be filled by farmer
 	    uint quantity;
 	    uint statusOrder;                ///// 0 -- store ;; 1 -- onWay ;; 2 -- delivered;
@@ -66,7 +67,8 @@ contract openFarming{
 	    uint orderId;
 	    uint cropId;
 	    uint storeId;
-	    uint transportId;
+	    uint transportId;               //////////to be filled by farmer
+	    uint transportOrderId;    //////////to be filled by farmer
 	    uint quantity;
 	    uint statusOrder;                ///// 0 -- farmer ;; 1 -- onWay ;; 2 -- delivered;
 	    uint delivered;
@@ -78,6 +80,7 @@ contract openFarming{
 	    uint orderId;
 	    uint orderType; ////////////0 -- buyerOrder ;; 1 -- storeOrder
 	    uint orderTaken;
+	    uint transportId;
 	    uint senderId;
 	    uint recieverId;
 	    uint quantity;
@@ -158,30 +161,46 @@ contract openFarming{
 	function addBuyerOrder(uint cropId, uint buyerId, uint quant) returns (bool) {
 	    uint trans = 20;
 	    uint store = 20;
+	    uint transOrder = 100;
 	    uint st = 0; uint d = 0; uint p = 0; uint a = 2;
-	    buyerOrderInfo[buyerOrderCount] = buyerOrder(buyerOrderCount, cropId, buyerId, trans, store, quant, st, d, p, a);
+	    buyerOrderInfo[buyerOrderCount] = buyerOrder(buyerOrderCount, cropId, buyerId, trans, transOrder, store, quant, st, d, p, a);
 	    buyerOrderCount++;
 	    return true;
 	}
 	
 	function addStoreOrder(uint cropId, uint storeId, uint quant ) returns (bool) {
 	    uint trans = 20;
+	    uint transOrder = 100;
 	    uint st = 0; uint d = 0; uint p = 0; uint a = 2;
-	    storeOrderInfo[storeOrderCount] = storeOrder(storeOrderCount, cropId, storeId, trans, quant, st, d, p, a);
+	    storeOrderInfo[storeOrderCount] = storeOrder(storeOrderCount, cropId, storeId, trans,  transOrder, quant, st, d, p, a);
 	    storeOrderCount++;
 	    return true;
 	}
 	
-	function addTransportOrder(uint orderType, uint orderTaken ) returns (bool) {
+	function addTransportOrder(uint orderType, uint orderTaken, uint transportId ) returns (bool) {
 	    //s r q
+	    uint c;
+	    uint s;
+	    uint r;
+	    uint q;
 	    if(orderType == 0) {      /////////////////Buyer
-            uint c = buyerOrderInfo[orderTaken].cropId;	 
-            uint s = cropInfo[c].ownId;
-            uint r = buyerOrderInfo[orderTaken].buyerId;
-            uint q = buyerOrderInfo[orderTaken].quantity;
+            c = buyerOrderInfo[orderTaken].cropId;	 
+            s = cropInfo[c].ownId;
+            r = buyerOrderInfo[orderTaken].buyerId;
+            q = buyerOrderInfo[orderTaken].quantity;
+            buyerOrderInfo[orderTaken].transportId = transportId;
+            buyerOrderInfo[orderTaken].transportOrderId = transportOrderCount;
+	    }
+	    else if(orderType == 1) {      /////////////////Storage
+            c = storeOrderInfo[orderTaken].cropId;	 
+            s = cropInfo[c].ownId;
+            r = storeOrderInfo[orderTaken].storeId;
+            q = storeOrderInfo[orderTaken].quantity;
+            storeOrderInfo[orderTaken].transportId = transportId;
+            storeOrderInfo[orderTaken].transportOrderId = transportOrderCount;
 	    }
 	    uint st = 0; uint d = 0; uint p = 0; uint a = 2;
-	    transportOrderInfo[transportOrderCount] = transportOrder(transportOrderCount, orderType, orderTaken, s, r, q, st, d, p ,a);
+	    transportOrderInfo[transportOrderCount] = transportOrder(transportOrderCount, orderType, orderTaken, transportId, s, r, q, st, d, p ,a);
         transportOrderCount++;
         return true;
 	}
@@ -199,26 +218,78 @@ contract openFarming{
 	}
 	
 	function changeDelivered(uint orderType, uint orderId, uint newStatus) returns (bool) {  ////orderType: 0--buyer 1--store 2--transport
+        uint transOrderId;
         if(orderType == 0){
             buyerOrderInfo[orderId].delivered = newStatus;
+            transOrderId = buyerOrderInfo[orderId].transportOrderId;
+            if(transportOrderInfo[transOrderId].delivered == 1){
+                    transportOrderInfo[transOrderId].statusOrder = 2;
+                    buyerOrderInfo[orderId].statusOrder = 2;
+            }
         }
         else if(orderType == 1){
             storeOrderInfo[orderId].delivered = newStatus;
+            transOrderId = storeOrderInfo[orderId].transportOrderId;
+            if(transportOrderInfo[transOrderId].delivered == 1){
+                    transportOrderInfo[transOrderId].statusOrder = 2;
+                    storeOrderInfo[orderId].statusOrder = 2;
+            }
         }
         else if(orderType == 2){
             transportOrderInfo[orderId].delivered = newStatus;
+            uint orderT = transportOrderInfo[orderId].orderType;
+            uint orderI = transportOrderInfo[orderId].orderTaken;
+            if(orderT == 0){
+                if(buyerOrderInfo[orderI].delivered == 1){
+                    transportOrderInfo[orderId].statusOrder = 2;
+                    buyerOrderInfo[orderI].statusOrder = 2;
+                }   
+            }
+            
+            else if(orderT == 1){
+                if(storeOrderInfo[orderI].delivered == 1){
+                    transportOrderInfo[orderId].statusOrder = 2;
+                    storeOrderInfo[orderI].statusOrder = 2;
+                }   
+            }
         }
 	}
 	
 	function changePicked(uint orderType, uint orderId, uint newStatus) returns (bool) {  ////orderType: 0--buyer 1--store 2--transport
+        uint transOrderId;
         if(orderType == 0){
             buyerOrderInfo[orderId].picked = newStatus;
+            transOrderId = buyerOrderInfo[orderId].transportOrderId;
+            if(transportOrderInfo[transOrderId].picked == 1){
+                    transportOrderInfo[transOrderId].statusOrder = 1;
+                    buyerOrderInfo[orderId].statusOrder = 1;
+            }
         }
         else if(orderType == 1){
             storeOrderInfo[orderId].picked = newStatus;
+            transOrderId = storeOrderInfo[orderId].transportOrderId;
+            if(transportOrderInfo[transOrderId].picked == 1){
+                    transportOrderInfo[transOrderId].statusOrder = 1;
+                    storeOrderInfo[orderId].statusOrder = 1;
+            }
         }
         else if(orderType == 2){
             transportOrderInfo[orderId].picked = newStatus;
+            uint orderT = transportOrderInfo[orderId].orderType;
+            uint orderI = transportOrderInfo[orderId].orderTaken;
+            if(orderT == 0){
+                if(buyerOrderInfo[orderI].picked == 1){
+                    transportOrderInfo[orderId].statusOrder = 1;
+                    buyerOrderInfo[orderI].statusOrder = 1;
+                }   
+            }
+            
+            else if(orderT == 1){
+                if(storeOrderInfo[orderI].picked == 1){
+                    transportOrderInfo[orderId].statusOrder = 1;
+                    storeOrderInfo[orderI].statusOrder = 1;
+                }   
+            }
         }
 	}
 	
@@ -234,22 +305,3 @@ contract openFarming{
         }
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

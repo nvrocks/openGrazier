@@ -1,8 +1,8 @@
 $(document).ready(function(){
 
 	$('.login-signup').on("click",function(){
-		$('.overlay-veil').fadeIn();
-		$('.overlay').fadeIn();
+		$('.overlay-veil').show(500);
+		$('.overlay').show(500);
 	});
 
 	$('.login').on("click",function(){
@@ -23,8 +23,8 @@ $(document).ready(function(){
 	});
 
 	$('.close-overlay').on("click",function(){
-		$('.overlay').fadeOut(100);
-		$('.overlay-veil').fadeOut();
+		$('.overlay').hide(500);
+		$('.overlay-veil').hide(500);
 	});
 	
 

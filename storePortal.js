@@ -36,7 +36,9 @@ function showAllOrders(){
 		str = contractInstance.storeOrderInfo.call(i)+'';
 		console.log(str);
 		var arr = str.split(',');
-		id = parseInt(arr[2]);
+		
+		cropID = parseInt(arr[1]);
+		ownerName = contractInstance.getCropOwner.call(cropID);
 
 		if(id == toAccount){
 			cropID = parseInt(arr[1]);

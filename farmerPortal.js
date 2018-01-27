@@ -37,6 +37,7 @@ function showCrops()
 }
 
 function showAllStores(){
+	data ="";
 	for (i = 0; i < contractInstance.storeCount.call().c[0] ; i++ ) {
 		str = contractInstance.storeInfo.call(i)+'';
 		console.log(str);
@@ -45,14 +46,71 @@ function showAllStores(){
 		name = contractInstance.getUserName.call(id)+'';
 		data += "<tr> <td> " + arr[0] + "</td><td> "+ name + "</td><td> " + arr[4] + "</td><td> " + arr[3] + "</td></tr>";
 	}
+	 	$("#storageTable").html(data);
+}
+
+function showAllTransports(){
+	data ="";
+	for (i = 0; i < contractInstance.transportCount.call().c[0] ; i++ ) {
+		str = contractInstance.transportInfo.call(i)+'';
+		console.log(str);
+		var arr = str.split(',');
+		id = parseInt(arr[1]);
+		name = contractInstance.getUserName.call(id)+'';
+		data += "<tr> <td> " + arr[0] + "</td><td> "+ name + "</td><td> " + arr[2] + "</td><td> " + arr[3] + "</td></tr>";
+	}
+	$("#transportTable").html(data);
 }
 
 function placeStoreOrder(){
 	//////////CropId CropQuantity StoreId will be given.
 		contractInstance.addStoreOrder(cropId, storeId, quant , { from: web3.eth.accounts[toAccount],gas: 3000000});
+}
 
+function placeTransportOrder(){
 	/////////Now orderType & orderId will be obtained for transportation
 		contractInstance.addTransportOrder(orderType, orderTaken, { from: web3.eth.accounts[toAccount],gas: 3000000});
+}
+
+function showBuyerOrder() {
+	for (i = 0; i < contractInstance.buyerOrderCount.call().c[0] ; i++ ) {
+		str = contractInstance.buyerOrderInfo.call(i)+'';
+		console.log(str);
+		var arr = str.split(',');
+		
+		cropID = parseInt(arr[1]);
+		crop = contractInstance.cropInfo.call(cropID);
+		var cp = crop.split(',');
+		id = parseInt(cp[2]);
+
+		if(id == toAccount){
+			///////////////STATUS CODES YET TO BE USED................
+			data += "<tr> <td> " + arr[0] + "</td><td> "+ arr[1] + "</td><td> " + arr[2] + "</td><td> " + arr[6] + "</td></tr>";	
+		}		
+	}
+	$("#store_orders").html(data);
+}
+
+function showStoreOrders(){
+	for (i = 0; i < contractInstance.storeOrderCount.call().c[0] ; i++ ) {
+		str = contractInstance.storeOrderInfo.call(i)+'';
+		console.log(str);
+		var arr = str.split(',');
+		
+		cropID = parseInt(arr[1]);
+		crop = contractInstance.cropInfo.call(cropID);
+		var cp = crop.split(',');
+		id = parseInt(cp[2]);
+
+		if(id == toAccount){
+			cropID = parseInt(arr[1]);
+			ownerName = contractInstance.getCropOwner.call(cropID);
+			
+			///////////////STATUS CODES YET TO BE USED................
+			data += "<tr> <td> " + arr[0] + "</td><td> "+ arr[1] + "</td><td> " + arr[2] + "</td><td> " + arr[5] + "</td></tr>";	
+		}		
+	}
+	$("#store_orders").html(data);
 }
 
 function acceptBuyerOrder(){

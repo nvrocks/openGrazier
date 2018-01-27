@@ -56,7 +56,7 @@ contract openFarming{
 	    uint transportId;          //////////to be filled by farmer
 	    uint storeId;                //////////to be filled by farmer
 	    uint quantity;
-	    uint status;                ///// 0 -- store ;; 1 -- onWay ;; 2 -- delivered;
+	    uint statusOrder;                ///// 0 -- store ;; 1 -- onWay ;; 2 -- delivered;
 	    uint delivered;             ///// 1 -- confirmation
 	    uint picked;
 	    uint accept;       //////////////0--decline ;; 1--Accepted ;; 2--No Action
@@ -68,7 +68,7 @@ contract openFarming{
 	    uint storeId;
 	    uint transportId;
 	    uint quantity;
-	    uint status;                ///// 0 -- farmer ;; 1 -- onWay ;; 2 -- delivered;
+	    uint statusOrder;                ///// 0 -- farmer ;; 1 -- onWay ;; 2 -- delivered;
 	    uint delivered;
 	    uint picked;
 	    uint accept;       //////////////0--decline ;; 1--Accepted ;; 2--No Action
@@ -81,7 +81,7 @@ contract openFarming{
 	    uint senderId;
 	    uint recieverId;
 	    uint quantity;
-	    uint status;       //////// 0 -- sender ;; 1 -- onWay ;; 2 -- reciever;
+	    uint statusOrder;       //////// 0 -- sender ;; 1 -- onWay ;; 2 -- reciever;
 	    uint delivered;
 	    uint picked;
 	    uint accept;       //////////////0--decline ;; 1--Accepted ;; 2--No Action
@@ -184,6 +184,54 @@ contract openFarming{
 	    transportOrderInfo[transportOrderCount] = transportOrder(transportOrderCount, orderType, orderTaken, s, r, q, st, d, p ,a);
         transportOrderCount++;
         return true;
+	}
+
+	function changeStatus(uint orderType, uint orderId, uint newStatus) returns (bool) {  ////orderType: 0--buyer 1--store 2--transport
+        if(orderType == 0){
+            buyerOrderInfo[orderId].statusOrder = newStatus;
+        }
+        else if(orderType == 1){
+            storeOrderInfo[orderId].statusOrder = newStatus;
+        }
+        else if(orderType == 2){
+            transportOrderInfo[orderId].statusOrder = newStatus;
+        }
+	}
+	
+	function changeDelivered(uint orderType, uint orderId, uint newStatus) returns (bool) {  ////orderType: 0--buyer 1--store 2--transport
+        if(orderType == 0){
+            buyerOrderInfo[orderId].delivered = newStatus;
+        }
+        else if(orderType == 1){
+            storeOrderInfo[orderId].delivered = newStatus;
+        }
+        else if(orderType == 2){
+            transportOrderInfo[orderId].delivered = newStatus;
+        }
+	}
+	
+	function changePicked(uint orderType, uint orderId, uint newStatus) returns (bool) {  ////orderType: 0--buyer 1--store 2--transport
+        if(orderType == 0){
+            buyerOrderInfo[orderId].picked = newStatus;
+        }
+        else if(orderType == 1){
+            storeOrderInfo[orderId].picked = newStatus;
+        }
+        else if(orderType == 2){
+            transportOrderInfo[orderId].picked = newStatus;
+        }
+	}
+	
+	function changeAccept(uint orderType, uint orderId, uint newStatus) returns (bool) {  ////orderType: 0--buyer 1--store 2--transport
+        if(orderType == 0){
+            buyerOrderInfo[orderId].accept = newStatus;
+        }
+        else if(orderType == 1){
+            storeOrderInfo[orderId].accept = newStatus;
+        }
+        else if(orderType == 2){
+            transportOrderInfo[orderId].accept = newStatus;
+        }
 	}
 }
 

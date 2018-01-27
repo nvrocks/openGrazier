@@ -62,16 +62,39 @@ function showAllTransports(){
 	$("#transportTable").html(data);
 }
 
-function placeStoreOrder(){
+// store order--------------------------------------------
+$('#get_value').on("click",function(){
+	var storeId = $(this).index();
+	console.log(storeId);
+	var cropId = $('#get_value1').val();
+	var quant = $('#get_value2').val();
+	console.log(cropId);
+	console.log(quant);
+	placeStoreOrder(cropId,storeId,quant);
+});
+
+function placeStoreOrder(cropId,storeId,quant){
+
 	//////////CropId CropQuantity StoreId will be given.
 		contractInstance.addStoreOrder(cropId, storeId, quant , { from: web3.eth.accounts[toAccount],gas: 3000000});
 }
+//-------------------------------------------------------------
 
-function placeTransportOrder(){
+// transport oredr-------------------------------------------
+$('#get_value_transport').on("click",function(){
+	var orderType = $('#orderType').val();
+	var orderTaken = $('#orderId').val();
+	placeTransportOrder(orderTaken,orderType);
+});
+function placeTransportOrder(orderTaken,orderType){
 	/////////Now orderType & orderId will be obtained for transportation
+		console.log(orderTaken);
+		console.log(orderType);
 		contractInstance.addTransportOrder(orderType, orderTaken, { from: web3.eth.accounts[toAccount],gas: 3000000});
 }
+//----------------------------------------------------------------
 
+//buyer-----------------------------------------------------------
 function showBuyerOrder() {
 	for (i = 0; i < contractInstance.buyerOrderCount.call().c[0] ; i++ ) {
 		str = contractInstance.buyerOrderInfo.call(i)+'';

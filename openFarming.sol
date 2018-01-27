@@ -219,8 +219,18 @@ contract openFarming{
 	
 	function changeDelivered(uint orderType, uint orderId, uint newStatus) returns (bool) {  ////orderType: 0--buyer 1--store 2--transport
         uint transOrderId;
+        uint s;
+        uint r;
+        uint m;
         if(orderType == 0){
             buyerOrderInfo[orderId].delivered = newStatus;
+            s = cropInfo[buyerOrderInfo[orderId].cropId].ownId;
+            r = transportInfo[buyerOrderInfo[orderId].transportId].ownId;
+            m = transportInfo[buyerOrderInfo[orderId].transportId].price;
+            
+            userInfo[s].balance -= m;
+            userInfo[r].balance += m;
+            
             transOrderId = buyerOrderInfo[orderId].transportOrderId;
             if(transportOrderInfo[transOrderId].delivered == 1){
                     transportOrderInfo[transOrderId].statusOrder = 2;
@@ -229,6 +239,15 @@ contract openFarming{
         }
         else if(orderType == 1){
             storeOrderInfo[orderId].delivered = newStatus;
+            
+            s = cropInfo[storeOrderInfo[orderId].cropId].ownId;
+            r = transportInfo[storeOrderInfo[orderId].transportId].ownId;
+            m = transportInfo[storeOrderInfo[orderId].transportId].price;
+            
+            userInfo[s].balance -= m;
+            userInfo[r].balance += m;
+            
+            
             transOrderId = storeOrderInfo[orderId].transportOrderId;
             if(transportOrderInfo[transOrderId].delivered == 1){
                     transportOrderInfo[transOrderId].statusOrder = 2;
@@ -240,6 +259,14 @@ contract openFarming{
             uint orderT = transportOrderInfo[orderId].orderType;
             uint orderI = transportOrderInfo[orderId].orderTaken;
             if(orderT == 0){
+                
+                s = buyerOrderInfo[orderI].buyerId;
+                r = cropInfo[buyerOrderInfo[orderI].cropId].ownId;
+                m = cropInfo[buyerOrderInfo[orderI].cropId].price;
+            
+                userInfo[s].balance -= m;
+                userInfo[r].balance += m;
+                
                 if(buyerOrderInfo[orderI].delivered == 1){
                     transportOrderInfo[orderId].statusOrder = 2;
                     buyerOrderInfo[orderI].statusOrder = 2;
@@ -247,6 +274,14 @@ contract openFarming{
             }
             
             else if(orderT == 1){
+                
+                r = storeOrderInfo[orderI].storeId;
+                s = cropInfo[storeOrderInfo[orderI].cropId].ownId;
+                m = storeInfo[storeOrderInfo[orderI].storeId].price;
+            
+                userInfo[s].balance -= m;
+                userInfo[r].balance += m;
+                
                 if(storeOrderInfo[orderI].delivered == 1){
                     transportOrderInfo[orderId].statusOrder = 2;
                     storeOrderInfo[orderI].statusOrder = 2;
@@ -296,6 +331,7 @@ contract openFarming{
 	function changeAccept(uint orderType, uint orderId, uint newStatus) returns (bool) {  ////orderType: 0--buyer 1--store 2--transport
         if(orderType == 0){
             buyerOrderInfo[orderId].accept = newStatus;
+            buyerOrderInfo[orderId].storeId = 0;
         }
         else if(orderType == 1){
             storeOrderInfo[orderId].accept = newStatus;
@@ -305,3 +341,22 @@ contract openFarming{
         }
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

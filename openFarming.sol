@@ -9,7 +9,9 @@ contract openFarming{
 	uint public cropCount;
 	uint public storeCount;
 	uint public transportCount;
-	uint public orderCount;
+	uint public buyerOrderCount;
+	uint public storeOrderCount;
+	uint public transportOrderCount;
 
 	struct userDetails{
 		string name;
@@ -47,23 +49,53 @@ contract openFarming{
 		uint price;
 	}
 	
-	struct order{
-		uint id;
-		uint quantity;
-		uint mainId;
-		uint sId1;
-		uint sId2;
-		uint orderType;        ////////// 0--crop ;; 1--storage ;; 2--transport
-		uint status;
-		uint accept;       //////////////0--decline ;; 1--Accepted ;; 2--No Action
+	struct buyerOrder{
+	    uint orderId;
+	    uint cropId;
+	    uint buyerId;
+	    uint transportId;          //////////to be filled by farmer
+	    uint storeId;                //////////to be filled by farmer
+	    uint quantity;
+	    uint status;                ///// 0 -- store ;; 1 -- onWay ;; 2 -- delivered;
+	    uint delivered;             ///// 1 -- confirmation
+	    uint picked;
+	    uint accept;       //////////////0--decline ;; 1--Accepted ;; 2--No Action
 	}
-
-    mapping( string => uint) emailToId;
+	
+	struct storeOrder{
+	    uint orderId;
+	    uint cropId;
+	    uint storeId;
+	    uint transportId;
+	    uint quantity;
+	    uint status;                ///// 0 -- farmer ;; 1 -- onWay ;; 2 -- delivered;
+	    uint delivered;
+	    uint picked;
+	    uint accept;       //////////////0--decline ;; 1--Accepted ;; 2--No Action
+	}
+	
+	struct transportOrder{
+	    uint orderId;
+	    uint orderType; ////////////0 -- buyerOrder ;; 1 -- storeOrder
+	    uint orderTaken;
+	    uint senderId;
+	    uint recieverId;
+	    uint quantity;
+	    uint status;       //////// 0 -- sender ;; 1 -- onWay ;; 2 -- reciever;
+	    uint delivered;
+	    uint picked;
+	    uint accept;       //////////////0--decline ;; 1--Accepted ;; 2--No Action
+	    
+	}
+    
+    mapping ( string => uint) emailToId;
 	mapping ( uint => userDetails ) public userInfo;
 	mapping ( uint => crop ) public cropInfo;
 	mapping ( uint => store ) public storeInfo;
 	mapping ( uint => transport ) public transportInfo;
-	mapping ( uint => order ) public orderInfo;
+	mapping ( uint => buyerOrder ) public buyerOrderInfo;
+	mapping ( uint => storeOrder ) public storeOrderInfo;
+	mapping ( uint => transportOrder ) public transportOrderInfo;
 	
 	function getUserId(string email) returns (uint)	{
 	    return emailToId[email];
@@ -115,12 +147,43 @@ contract openFarming{
 	    return true;
 	}
 	
-	function addOrder(uint quantity, uint id1, uint id2, uint id3, uint orderType) returns (bool) {
+	/*function addOrder(uint quantity, uint id1, uint id2, uint id3, uint orderType) returns (bool) {
 	    uint st  = 0; uint a = 2;
-	    orderInfo[orderCount] = order(orderCount, quantity, id1, id2, id3, orderType, st, a);
+	    orderInfo[orderCount] = order(orderCount, quantity, id1, id2, id3, orderType, st);
 	    orderCount++;
 	    return true;
 	    
+	}*/
+	
+	function addBuyerOrder(uint cropId, uint buyerId, uint quant) returns (bool) {
+	    uint trans = 20;
+	    uint store = 20;
+	    uint st = 0; uint d = 0; uint p = 0; uint a = 2;
+	    buyerOrderInfo[buyerOrderCount] = buyerOrder(buyerOrderCount, cropId, buyerId, trans, store, quant, st, d, p, a);
+	    buyerOrderCount++;
+	    return true;
+	}
+	
+	function addStoreOrder(uint cropId, uint storeId, uint quant ) returns (bool) {
+	    uint trans = 20;
+	    uint st = 0; uint d = 0; uint p = 0; uint a = 2;
+	    storeOrderInfo[storeOrderCount] = storeOrder(storeOrderCount, cropId, storeId, trans, quant, st, d, p, a);
+	    storeOrderCount++;
+	    return true;
+	}
+	
+	function addTransportOrder(uint orderType, uint orderTaken ) returns (bool) {
+	    //s r q
+	    if(orderType == 0) {      /////////////////Buyer
+            uint c = buyerOrderInfo[orderTaken].cropId;	 
+            uint s = cropInfo[c].ownId;
+            uint r = buyerOrderInfo[orderTaken].buyerId;
+            uint q = buyerOrderInfo[orderTaken].quantity;
+	    }
+	    uint st = 0; uint d = 0; uint p = 0; uint a = 2;
+	    transportOrderInfo[transportOrderCount] = transportOrder(transportOrderCount, orderType, orderTaken, s, r, q, st, d, p ,a);
+        transportOrderCount++;
+        return true;
 	}
 }
 

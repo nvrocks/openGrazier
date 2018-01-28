@@ -14,8 +14,7 @@
 
 	<style>
 	body{
-		padding:0;
-		margin:0;
+		margin-top: 30px;
 	}
 	
 	</style>
@@ -23,7 +22,7 @@
 	<body>
 				<div class="container">
 <ul class="nav nav-tabs">
-  <li id="view_crops"><a href="#viewcrop">VIEW CROPS</a></li>
+  <li id="view_crops" class="active"><a href="#viewcrop">VIEW CROPS</a></li>
   <li id="view_orders"><a href="#vieworders">VIEW ORDER</a></li>
 
 </ul>
@@ -35,6 +34,7 @@
 	<th class="text-center text-success">Name</th>
 	<th class="text-center text-success">Quantity</th>
 	<th class="text-center text-success">PRICE</th>
+
           </thead>
 		<tbody id="crop_show">
 			
@@ -57,6 +57,7 @@
 	<th class="text-center text-success">CROP ID</th>
 	<th class="text-center text-success">OWNER NAME</th>
 	<th class="text-center text-success">QUANTITY</th>
+
           </thead>
 		<tbody id="buyer_orders">
 
@@ -67,7 +68,7 @@
 
 <script>
 $(document).ready(function() {  
-    	$("#viewcrop").hide();
+    	$("#viewcrop").show();
     	$("#vieworders").hide();
     	
     

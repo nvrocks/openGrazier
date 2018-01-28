@@ -17,6 +17,12 @@
 
 
     <style type="text/css">
+      /*#intro{
+        background: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTas4KNihS3LcO8FSZ-uToI3R4HoKLbv4wYqzJHFuOvg0H6MUUUMw);
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-attachment: fixed;
+      }*/
       .table-responsive{
         margin: 0 10px;
       }
@@ -29,7 +35,31 @@
         border: 1px solid rgba(255,255,255,0.2);
         outline: 0;
       }
-
+      .pickUp{
+        color: yellow;
+      }
+      .delivered{
+        color: rgb(89, 244, 66);
+      }
+      .onWay{
+        color: rgb(237, 80, 211);
+      }
+      #welcome
+      {
+    position: relative;
+    top: 0px;
+    left: 85%;
+    margin: 0px;
+    /*height: 108px;*/
+    /*width: 250px;*/
+    /*background: #38021fb8;*/
+    font-family: cursive;
+    letter-spacing: 1.2px;
+    word-spacing: 2px;
+    color: whitesmoke;
+    /*border-radius :20px;*/
+    z-index: 9999;
+      }
     </style>
 	</head>
 <style>
@@ -38,6 +68,9 @@
 	<body>
 
 		<!-- Sidebar -->
+    <div id="welcome">
+         WELCOME 
+    </div>
 			<section id="sidebar">
 				<div class="inner">
 					<nav>
@@ -47,7 +80,6 @@
 							<li><a href="#two">VIEW STORAGE</a></li>
 							<li><a href="#three">VIEW TRANSPORT</a></li>
 							<li><a href="#four">VIEW ORDERS</a></li>
-              <li><a href="#five">VIEW STORE ORDERS</a></li>
 						</ul>
 					</nav>
 				</div>
@@ -65,6 +97,8 @@
             <th>Crop ID</th>
             <th>Crop Name</th>
             <th>Status</th>
+            <th>Quantity</th>
+            <th>Price</th>
           </tr>
         </thead>
         <tbody id="cropTable">
@@ -81,7 +115,6 @@
 		<div class="col-sm-8 col-md-6">
  <div class="container col-sm8 col-md-6">
     <form class="horizontal" id="add_form">
-      <legend class="text-center text-primary"> POST ADDS </legend>
   <div class="form-group">
     <label for="crop_name">CROP NAMES</label>
     <input type="text" class="form-control" id="cropname" placeholder="Crop Name"/>
@@ -138,6 +171,7 @@
 <!-- TRANSPORT -->
 
 <section id="three" class="wrapper style1 fullscreen spotlight">
+<div class="container">
 <div class="table-responsive">
       <table class="table table-bordered table-striped">
         <thead>
@@ -145,10 +179,10 @@
           	<th>TRANSPORT_ID</th>
             <th>TRANSPORT OWNER</th>
             <th>PRICE</th>
-            <th></th>
+            <th>CAPACITY</th>
           </tr>
         </thead>
-        <tbody id="transportTable">
+        <tbody id="transportTable" class="text-info">
         	       
  
         </tbody>
@@ -158,6 +192,7 @@
          <input type="text" placeholder="order Id" class="form-control" id="orderId">
          <input type="text" placeholder="Transport Id" class="form-control" id="transportId">
           <button id="placed_transport" onclick="placeTransportOrder()">SUBMIT</button>
+          </div>
 </section>
 
 <section id="four" class="wrapper style1 fullscreen fade-up">
@@ -169,36 +204,19 @@
 			      <th>CROP_ID</th>
             <th>BUYER</th>
             <th>QUANTITY</th>
+            <th>Status</th>
 
           </tr>
         </thead>
         <tbody id="buyerOrderTable">
-        	<tr>
-        	</tr>
+        	<!-- <tr>
+        	</tr> -->
         </tbody>
       </table>
     </div>
 </section>
 
-<section id="five" class="wrapper style1 fullscreen fade-up">
-<div class="table-responsive">
-      <table class="table table-bordered table-striped">
-        <thead>
-          <tr>
-            <th>ORDER_ID</th>
-            <th>CROP_ID</th>
-            <th>BUYER</th>
-            <th>QUANTITY</th>
 
-          </tr>
-        </thead>
-        <tbody id="storageOrderTable">
-          <tr>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-</section>
 <footer>
 <b><center>Copyrights@HACK36.com</center></b>
 </footer>

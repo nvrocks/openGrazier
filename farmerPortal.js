@@ -4,7 +4,7 @@ abi = JSON.parse('[{"constant":false,"inputs":[{"name":"ownid","type":"uint256"}
 
 registerUserContract = web3.eth.contract(abi);
 
-contractInstance = registerUserContract.at('0x7fa0e611d9e5f17f45a80c7db30b27cab1ff927a');
+contractInstance = registerUserContract.at('0x6e508468abc8c799193387d6787f7bb2454524c5');
 data = "" ;
 
 var url = window.location.href + '';
@@ -13,6 +13,9 @@ var arr = url.split("=");
 toAccount=arr[1];
 console.log("toAccount: "+toAccount);
 
+var naam = contractInstance.getUserName.call(toAccount)+'';
+$('#welcome').text("WELCOME " + naam);
+$('#welcome').css("text-transform","uppercase");
 $('#submit').on("click",function(e){
 	e.preventDefault();
 	postCrop();
@@ -105,7 +108,7 @@ $('#get_value_transport').on("click",function(){
 });
 function placeTransportOrder(){
 	/////////Now orderType & orderId will be obtained for transportation
-	
+	//e.preventDefault();
 	var orderType = $('#orderType').val();
 	var orderTaken = $('#orderId').val();
 	var tid = $('#transportId').val();
@@ -118,6 +121,7 @@ function placeTransportOrder(){
 
 //buyer-----------------------------------------------------------
 function showBuyerOrder() {
+	data ="";
 	for (i = 0; i < contractInstance.buyerOrderCount.call().c[0] ; i++ ) {
 		str = contractInstance.buyerOrderInfo.call(i)+'';
 		console.log(str);
@@ -130,13 +134,32 @@ function showBuyerOrder() {
 
 		if(id == toAccount){
 			///////////////STATUS CODES YET TO BE USED................
-			data += "<tr> <td> " + arr[0] + "</td><td> "+ arr[1] + "</td><td> " + contractInstance.getUserName.call(arr[2]) + "</td><td> " + arr[6] + "</td></tr>";	
+			data += "<tr> <td> " + arr[0] + "</td><td> "+ arr[1] + "</td><td> " + contractInstance.getUserName.call(arr[2]) + "</td><td> " + arr[6] + "</td><td class='status'>Pick Up</td></tr>";	
 		}		
 	}
 	$("#buyerOrderTable").html(data);
+	$('.status').css("cursor","pointer");
+	$('.status').addClass("pickUp");
 }
+$('#buyerOrderTable').on("click", '.status', function(){
+
+	if($('.status').text() == "Pick Up"){
+		$('.status').text("On the Way");
+		$(this).removeClass("pickUp");
+		$(this).addClass("onWay");
+	}
+	else if($(this).text() == "On the Way"){
+		$(this).text("Delivered");
+		$(this).removeClass("onWay");
+		$(this).addClass("delivered");
+	}
+	else{
+		$(this).css("click","disabled");
+	}
+});
 
 function showStoreOrders(){
+	data="";
 	for (i = 0; i < contractInstance.storeOrderCount.call().c[0] ; i++ ) {
 		str = contractInstance.storeOrderInfo.call(i)+'';
 		console.log(str);
@@ -174,7 +197,7 @@ function declineBuyerOrder(){
 	contractInstance.changeAccept(orderType, orderId, newState, { from: web3.eth.accounts[toAccount],gas: 3000000});
 }
 
-function pickStoreOrder(){
+function pickBuyerOrder(){
 	orderType = 1;
 	newState = 1;
 	///////////////////////////////////OrderId will be obtained

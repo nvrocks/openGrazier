@@ -1,5 +1,5 @@
 body{
-	background: url(https://images6.alphacoders.com/401/thumb-1920-401738.png);
+	background: url("https://wallpapercave.com/wp/YTU2KoD.jpg");
 }
 .app-name{
 	float: left;
@@ -11,18 +11,18 @@ body{
 	color: white;
 }
 .app-about{
-	color: white;
-	font-size: 28px;
+	color: black;
+	font-size: 38px;
 	text-align: center;
 	height: 200px;
-	padding: 6% 0; 
+	padding: 16% 0; 
 }
 .login-signup{
 	background: rgba(0,0,0,0.8);
 	border-bottom: 1px solid rgba(123,222,222,1);
 	text-align: right;
 	font-size: 24px;
-	padding: 15.5px 0;
+	padding: 15.8px 0;
 	padding-right: 20px;
 	color: white;
 }

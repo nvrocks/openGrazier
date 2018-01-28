@@ -65,11 +65,11 @@
 	<th class="text-center text-success">QUANTITY</th>
 	<th class="text-center text-success">OWNER NAME</th>
 	<th class="text-center text-success">TRANSPORT ID</th>
-	<th class="text-center text-success">VIEW STATUS</th>
+	
 
 </thead>
-		<tbody>
-			<tr id="store_details">
+		<tbody id="store_details">
+			<tr>
 				<td id="order_id"></td>
 				<td id="quan"></td>
 				<td id="owner"></td>
@@ -88,10 +88,8 @@
 	<th class="text-center text-success">CAPACITY</th>
 	<th class="text-center text-success">PRICE</th>
           </thead>
-		<tbody>
-			<tr id="store_adds">
-				
-			</tr>
+		<tbody id="store_orders" class="text-center text-warning">
+			
 			
 		</tbody>
 	</table>
@@ -102,7 +100,7 @@
     	<script>
     	$(document).ready(function() {  
     	$("#addpost").hide();
-    	$("#orders").hide();
+    	$("#orders").show();
     	$("#viewpost").hide();
     
         $("#show_orders").click(function(){
